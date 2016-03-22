@@ -2,19 +2,28 @@ $(function() {
   $('form').submit(function(event) {
     event.preventDefault();
 
-    var countTo = parseInt($('input.countTo').val());
-    var countBy = parseInt($('input.countBy').val());
+    var countTo = parseInt($('.countTo').val());
+    var countBy = parseInt($('.countBy').val());
     var output = [];
 
+    var red = function() {
+      $('label').addClass('red');
+      $('input').addClass('red');
+      $('#results').addClass('red');
+    }
+
+    var notRed = function() {
+      $('label').removeClass('red');
+      $('input').removeClass('red');
+      $('#results').removeClass('red');
+    }
+
     $('#results').show();
-    $('#countTo').append(countTo);
-    $('#countBy').append(countBy);
 
     if (countBy < 0 || countTo < 0) {
       $('#results').empty();
-      $('label').addClass('red');
-      $('#results').addClass('red');
-      var bad = $('#results').append('<h4>Please have your "Count By" number be greater than your "Count To" number.</h4>');
+      $(red);  // turns text and input red
+      var bad = $('#results').append('<h4>Please have both numbers greater than zero and have your "Count By" number be greater than your "Count To" number.</h4>');
       return bad;
     }
 
@@ -22,47 +31,31 @@ $(function() {
       output.push(i);
     }
 
-
-    if (isNaN(countBy) && isNaN(countTo)) {
-      $('#results').empty();
-      $('label').addClass('red');
-      $('#results').addClass('red');
-      $('#results').append('<h4>Please enter numbers in fields above.</h4>');
-    } else if (isNaN(countBy)) {
-      $('#results').empty();
+    if (isNaN(countBy) && isNaN(countTo)) {  // if both are negative
+      $('#results').empty().append('<h4>Please enter numbers in fields above.</h4>');
+      $(red);
+    } else if (isNaN(countBy)) {  // if countBy is empty
+      $('#results').empty().addClass('red').append('<h4>Please enter numbers in fields above.</h4>');
       $('.to').removeClass('red');
       $('.by').addClass('red');
-      $('#results').addClass('red');
-      $('#results').append('<h4>Please enter numbers in fields above.</h4>');
-    } else if (isNaN(countTo)) {
-      $('#results').empty();
-      $('.by').removeClass('red');
+    } else if (isNaN(countTo)) {  // if countTo is empty
+      $('#results').empty().addClass('red').append('<h4>Please enter numbers in fields above.</h4>');
       $('.to').addClass('red');
-      $('#results').addClass('red');
-      $('#results').append('<h4>Please enter numbers in fields above.</h4>');
-    }else if (countBy > countTo) {
-      $('#results').empty();
+      $('.by').removeClass('red');
+    } else if (countBy > countTo) {
+      $('#results').empty().addClass('red').append('<h4>Please have your "Count By" number be less than your "Count To" number.</h4>');
       $('.to').removeClass('red');
       $('.by').addClass('red');
-      $('.to').removeClass('red');
-      $('#results').addClass('red');
       $('.countBy').addClass('red');
-      $('#results').append('<h4>Please have your "Count By" number be less than your "Count To" number.</h4>');
     } else {
       $('label').removeClass('red');
       $('.countBy').removeClass('red');
-      $('#results').removeClass('red');
-      $('#results').empty();
-      $('#results').append('<h4>Count To: ' + countTo + '</h4>');
-      $('#results').append('<h4>Count By: ' + countBy + '</h4>');
+      $('#results').removeClass('red').empty().append('<h4>Count To: ' + countTo + '</h4><h4>Count By: ' + countBy + '</h4>');
 
       output.forEach(function(number) {
         $('#results').append(number + ', ');
       });
     }
-
-
-
   });
 
 
